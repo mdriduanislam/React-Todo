@@ -5,10 +5,16 @@ import TodoList from './components/TodoList'
 
 
 function App() {
-  const [todos, setTodos] = useState(()=>{
+  const [todos, setTodos] = useState(() => {
     const savedtodos = localStorage.getItem('todos');
-    return savedtodos? JSON.parse(savedtodos) : [];
+    return savedtodos ? JSON.parse(savedtodos) : [];
   });
+  const [filter, setFilter] = useState('all');
+  const filteredTodos = todos.filter((todo) => {
+    if (filter === 'active') return !todo.completed;
+    if (filter === 'completed') return todo.completed;
+    return true;
+  })
   const addTodo = (text) => {
     const newTodos = {
       id: Date.now(),
@@ -22,19 +28,36 @@ function App() {
   }
 
   const removeTodo = (id) => {
-    setTodos(todos.filter((todo) => todo.id !== id ))
+    setTodos(todos.filter((todo) => todo.id !== id))
   }
 
-  useEffect(()=>{
+  useEffect(() => {
     localStorage.setItem('todos', JSON.stringify(todos));
-  },[todos])
+  }, [todos])
   return (
     <>
       <h1 className="text-3xl font-bold">
         📝My todo App
       </h1>
       <TodoForm addTodo={addTodo} />
-      <TodoList todos={todos} toggleTodo={toggleTodo} removeTodo={removeTodo} />
+      <div>
+        <button onClick={() => setFilter('all')}
+          style={{ fontWeight: filter === 'all' ? 'bold' : 'normal' }}
+        >
+          All
+        </button>
+        <button onClick={() => setFilter('active')}
+          style={{ fontWeight: filter === 'active' ? 'bold' : 'normal' }}
+        >
+          Active
+        </button>
+        <button onClick={() => setFilter('completed')}
+          style={{ fontWeight: filter === 'completed' ? 'bold' : 'normal' }}
+        >
+          Completed
+        </button>
+      </div>
+      <TodoList todos={filteredTodos} toggleTodo={toggleTodo} removeTodo={removeTodo} />
     </>
   )
 }
