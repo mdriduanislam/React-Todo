@@ -31,6 +31,10 @@ function App() {
     setTodos(todos.filter((todo) => todo.id !== id))
   }
 
+  const editTodo = (id, newText) =>{
+    setTodos(todos.map((todo)=>todo.id === id? {...todo, text:newText} : todo))
+  }
+
   useEffect(() => {
     localStorage.setItem('todos', JSON.stringify(todos));
   }, [todos])
@@ -57,7 +61,7 @@ function App() {
           Completed
         </button>
       </div>
-      <TodoList todos={filteredTodos} toggleTodo={toggleTodo} removeTodo={removeTodo} />
+      <TodoList todos={filteredTodos} toggleTodo={toggleTodo} removeTodo={removeTodo} editTodo={editTodo}/>
     </>
   )
 }
