@@ -2,6 +2,7 @@ import './App.css'
 import { useState, useEffect } from 'react'
 import TodoForm from './components/TodoForm'
 import TodoList from './components/TodoList'
+import { motion, AnimatePresence } from "framer-motion";
 
 
 function App() {
@@ -44,38 +45,60 @@ function App() {
     localStorage.setItem('todos', JSON.stringify(todos));
   }, [todos])
   return (
-    <div className='bg-blue-950 flex justify-center items-center w-full h-screen'>
-      <div className='bg-blue-900 shadow-2xl p-20 rounded-3xl h-[90%] w-[70%] flex flex-col gap-3 justify-center items-center'> 
-        <h1 className='text-3xl font-bold text-center pb-5' >
-          My Todo App
-        </h1>
-        <TodoForm addTodo={addTodo}/>
-        <input className='bg-blue-500 rounded-lg w-[50%] h-10 outline-none p-2'
+    <div className="bg-blue-950 flex justify-center items-center w-full h-screen">
+      <div className="bg-blue-900 shadow-2xl p-10 rounded-3xl h-[90%] w-[70%] 
+                  flex flex-col items-center gap-4">
+
+        {/* Title */}
+        <h1 className="text-3xl font-bold text-white text-center">My Todo App</h1>
+
+        {/* Todo Form */}
+        <TodoForm addTodo={addTodo} />
+
+        {/* Search Bar */}
+        <input
+          className="bg-blue-800 text-white px-4 py-2 rounded-lg w-[60%] 
+                 border border-blue-700 shadow-sm
+                 focus:outline-none focus:ring focus:ring-blue-500"
           type="text"
-          placeholder='Seach your todos...'
+          placeholder="Search your todos..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
-        <div className='w-[50%] h-10 flex gap-2 justify-around items-center' >
-          <button className='bg-blue-500 rounded-lg w-[33%] h-full' onClick={() => setFilter('all')}
-            style={{ fontWeight: filter === 'all' ? 'bold' : 'normal' }}
-          >
-            All
-          </button>
-          <button className='bg-blue-500 rounded-lg w-[33%] h-full' onClick={() => setFilter('active')}
-            style={{ fontWeight: filter === 'active' ? 'bold' : 'normal' }}
-          >
-            Active
-          </button>
-          <button className='bg-blue-500 rounded-lg w-[33%] h-full' onClick={() => setFilter('completed')}
-            style={{ fontWeight: filter === 'completed' ? 'bold' : 'normal' }}
-          >
-            Completed
-          </button>
+
+        {/* Filter Buttons */}
+        <div className="w-[60%] flex gap-3 justify-center">
+          {["all", "active", "completed"].map((f) => (
+            <button
+              key={f}
+              onClick={() => setFilter(f)}
+              className={`flex-1 py-2 rounded-full transition shadow 
+            ${filter === f
+                  ? "bg-blue-600 text-white font-semibold"
+                  : "bg-blue-700 text-gray-200 hover:bg-blue-600 hover:text-white"
+                }`}
+            >
+              {f.charAt(0).toUpperCase() + f.slice(1)}
+            </button>
+          ))}
         </div>
-        <TodoList todos={searchTodo} toggleTodo={toggleTodo} removeTodo={removeTodo} editTodo={editTodo} />
+
+        {/* Divider */}
+        <div className="border-t border-blue-700 w-[60%] opacity-40"></div>
+
+        {/* TodoList (KEEP YOUR OWN VERSION) */}
+        <div className="w-[60%] bg-blue-800 rounded-2xl shadow-xl p-5 overflow-y-auto">
+          <TodoList
+            todos={searchTodo}
+            toggleTodo={toggleTodo}
+            removeTodo={removeTodo}
+            editTodo={editTodo}
+          />
+        </div>
       </div>
     </div>
+
+
   )
 }
 
